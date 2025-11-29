@@ -27,3 +27,4 @@ Thumbs.db
 **/.env
 **/*.log
 **/coverage
+client/public/images/**

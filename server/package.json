@@ -1,17 +1,27 @@
 {
-  "name": "server",
+  "name": "sf6-frame-data",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ishaansingh99/SF6-Frame-Data.git"
+  },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ishaansingh99/SF6-Frame-Data/issues"
+  },
+  "homepage": "https://github.com/ishaansingh99/SF6-Frame-Data#readme",
   "dependencies": {
     "axios": "^1.13.2",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "mongodb": "^7.0.0"
+    "mongoose": "^9.0.0"
   }
 }
