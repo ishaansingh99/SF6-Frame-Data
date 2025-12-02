@@ -2,13 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const frameData = require('./framedata/SF6FrameData.json');
 const routes = require('./routes/routes.js');
+require('dotenv').config();
 // const jwt = require('jsonwebtoken');
 // const session = require('express-session');
 // const path = require('path');
 // const mongoose = require('mongoose');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.REACT_APP_PORT || 3001;
 // const SECRET_KEY = 'your_secret_key';
 
 // mongoose.set('strictQuery', false);
@@ -25,10 +26,6 @@ app.use('/', routes);
 // Separate routing functions into separate files
 // Routing for finding all chars
 // Routing for all moves on one char
-
-
-
-
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

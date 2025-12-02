@@ -4,7 +4,7 @@ const router = express.Router();
 let axios = require("axios");
 
 // Route to get all characters
-router.get('/', (req, res) => {
+router.get('/chars', (req, res) => {
     const chars = Object.keys(frameData);
     res.json(chars);
 });
