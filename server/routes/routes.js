@@ -10,12 +10,23 @@ router.get('/chars', (req, res) => {
 });
 
 // Route to get all moves for a specific character
-router.get('/:charName/', (req, res) => {
+router.get('/:charName/moves', (req, res) => {
     const charName = req.params.charName;
     const charData = frameData[charName];
 
     if (charData) {
-        res.json(charData.moves);
+        res.json(charData.moves.normal);
+    } else {
+        res.status(404).json({ error: 'Character not found' });
+    }
+});
+
+router.get('/:charName/stats', (req, res) => {
+    const charName = req.params.charName;
+    const charData = frameData[charName];
+
+    if (charData) {
+        res.json(charData.stats);
     } else {
         res.status(404).json({ error: 'Character not found' });
     }

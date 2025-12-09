@@ -4,22 +4,25 @@ import React, { useState, useEffect, useRef, use } from "react";
 import axios from "axios";
 import { Link, useMatch, useNavigate, useLocation } from "react-router-dom";
 
+axios.defaults.baseURL = 'http://localhost:3001';
+
 const placeholderThumb = (name) =>
     `../public/images/${name}.png`;
 
-const Navbar = () => {
+const Navbar = (params) => {
     const [chars, setChars] = useState([]);
     const [open, setOpen] = useState(null);
     const [selected, setSelected] = useState(null);
     const containerRef = useRef(null);
-    const [activeTab, setActiveTab] = useState('moves');
+    // const [activeTab, setActiveTab] = useState('moves');
     const isCharPage = useMatch('/:charName/:tab');
     const navigate = useNavigate();
-
+    const location = useLocation();
+    
     useEffect(() => {
         const fetchChars = async () => {
             try {
-                const response = await axios.get(process.env.REACT_APP_API_HOST + '/chars');
+                const response = await axios.get('/chars');
                 setChars(response.data);
             } catch (error) {
                 console.error('Error fetching characters:', error);
@@ -36,21 +39,21 @@ const Navbar = () => {
     //     return () => document.removeEventListener("click", onDocClick);
     // }, []);
 
-    const location = useLocation();
 
     useEffect(() => {
         const pathParts = location.pathname.split('/');
         const charName = pathParts[1];
-        console.log("charName: ", charName);
+        // console.log("charName: ", charName);
         if (charName) setSelected(charName);
     }, [location.pathname]);
 
     const onSelect = (name) => {
+        // console.log(params.activeTab);
         setSelected(name);
         setOpen(false);
-        if (activeTab === 'moves')
+        if (params.activeTab === 'moves')
             navigate(`/${name}/moves`);
-        else if (activeTab === 'stats')
+        else if (params.activeTab === 'stats')
             navigate(`/${name}/stats`);
     };
 
@@ -88,16 +91,16 @@ const Navbar = () => {
                   <div className="tab-toggle" role="tablist" aria-label="Moves or Stats">
                       <Link
                           to={`/${selected}/moves`}
-                          className={`tab-btn ${activeTab === 'moves' ? 'active' : ''}`}
-                          onClick={() => setActiveTab('moves')}
+                          className={`tab-btn ${params.activeTab === 'moves' ? 'active' : ''}`}
+                        //   onClick={() => setActiveTab('moves')}
                       >
                           Moves
                       </Link>
 
                       <Link
                           to={`/${selected}/stats`}
-                          className={`tab-btn ${activeTab === 'stats' ? 'active' : ''}`}
-                          onClick={() => setActiveTab('stats')}
+                          className={`tab-btn ${params.activeTab === 'stats' ? 'active' : ''}`}
+                        //   onClick={() => setActiveTab('stats')}
                       >
                           Stats
                       </Link>

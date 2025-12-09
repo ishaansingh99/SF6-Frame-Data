@@ -5,38 +5,12 @@ import axios from "axios";
 const placeholderThumb = (name) =>
   `../public/images/${name}.png`;
 
+const NotFoundPage = () => {
 
-const Home = () => {
-  const [chars, setChars] = useState([]);
-  const [open, setOpen] = useState(null);
-  const [selected, setSelected] = useState(null);
-  
-  useEffect(() => {
-    // axios.defaults.baseURL = 'https://localhost:3001';
-    const fetchChars = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/chars');
-        setChars(response.data);
-      } catch (error) {
-        console.error('Error fetching characters:', error);
-      }
-    }
-    fetchChars();
-  }, []);
-
-  useEffect(() => {
-    if (chars.length) setSelected(chars[0]);
-  }, [chars]);
-
-  const onSelect = (name) => {
-    setSelected(name);
-    setOpen(null);
-  };
 return (
     <div className="app">
-      <br />
-      <br />
-        <h1>About</h1>
+        <h1>Page not found :(</h1>
+        <a href="/">Go back home</a>
         {/* <div className={`dropdown ${open ? 'open' : ''}`}>
         <button className="dropdown-toggle" onClick={() => setOpen((s) => !s)}>
             <img className="thumb" src={placeholderThumb(selected)} alt="" />
@@ -55,9 +29,8 @@ return (
             </ul>
         )}
         </div> */}
-
     </div>
     );
 };
 
-export default Home;
+export default NotFoundPage;
