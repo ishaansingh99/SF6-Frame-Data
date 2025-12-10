@@ -36,4 +36,4 @@ Ishaan Singh - [LinkedIn](https://www.linkedin.com/in/ishaan-singh-se/) - ishaan
 - Add main features
   - Frame data table
   - Search bar for table
-  - Gifs of selected moves
+  - Gifs of selected moves with full stats
