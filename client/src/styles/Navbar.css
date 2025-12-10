@@ -32,9 +32,17 @@
 
 /* center (character selector) */
 .nav-center {
-  flex: 1;
+  /* absolutely center the center column inside the navbar */
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 100%;
+  transform: translateX(-50%);
   display: flex;
+  align-items: center;
   justify-content: center;
+  pointer-events: none; /* avoid blocking clicks on left/right columns */
+  z-index: 1010;
 }
 
 /* right (links) */
@@ -57,11 +65,17 @@
 
 /* dropdown */
 .dropdown {
+  /* keep dropdown positioned so its menu can be absolute relative to it */
   position: relative;
   font-size: 0.95rem;
+  pointer-events: auto; /* re-enable pointer events inside the centered area */
 }
 
 .dropdown-toggle {
+  position: absolute; /* position the toggle absolutely so it sits centered */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -71,6 +85,7 @@
   padding: 6px 10px;
   border-radius: 8px;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 .thumb {
