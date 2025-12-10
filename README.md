@@ -32,8 +32,9 @@ Ishaan Singh - [LinkedIn](https://www.linkedin.com/in/ishaan-singh-se/) - ishaan
 ## To-Do:
 - Styling...
 - Eventually switch frame data to database
-- Add gifs (?)
 - Add main features
   - Frame data table
   - Search bar for table
   - Gifs of selected moves with full stats
+  - Add more columns to filter
+  - Add full move info when clicked

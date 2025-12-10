@@ -80,7 +80,7 @@
 .table-wrapper {
   width: 100%;
   overflow: auto;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 6px 18px rgba(16,24,40,0.06);
@@ -136,8 +136,8 @@
 /* Command toggle for moves table (Plain/Numpad) */
 .command-toggle {
   display: flex;
-  gap: 8px;
-  margin-bottom: 1rem;
+  gap: 4px;
+  margin-bottom: 0.25rem;
   margin-top: 0.5rem;
 }
 
@@ -187,4 +187,79 @@
   color: #fff;
   border-color: #4f46e5;
   box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+}
+
+.table-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0;
+  /* gap: 0.5rem;
+  margin-top: 1rem; */
+}
+
+.charpage-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 64px;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.filter-btn-wrapper {
+  position: relative;
+}
+
+/* Clickable table row */
+.clickable-row {
+  transition: background 0.15s;
+}
+.clickable-row:hover {
+  background: #f0f4ff;
+}
+
+/* Move detail modal styles */
+.move-detail-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.move-detail-content {
+  background: #fff;
+  border-radius: 8px;
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  position: relative;
+}
+.move-detail-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}
+.move-detail-content h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+.move-detail-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.move-detail-content li {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+.move-detail-content strong {
+  color: #2a4d8f;
 }

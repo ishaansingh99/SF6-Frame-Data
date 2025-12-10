@@ -1,3 +1,4 @@
+import MoveDetail from "./MoveDetail";
 import "../styles/Home.css";
 import "../styles/CharPage.css";
 import React, { useState, useEffect, useMemo } from "react";
@@ -7,12 +8,14 @@ import {
   getCoreRowModel,
 } from "@tanstack/react-table";
 import axios from "axios";
+import ColumnFilter from "./ColumnFilter";
 
 const placeholderThumb = (name) => `../public/images/${name}.png`;
 
 axios.defaults.baseURL = "http://localhost:3001";
 
 const CharPage = ({ activeTab }) => {
+  const [selectedRow, setSelectedRow] = useState(null);
   const { charName: paramChar } = useParams();
   const location = useLocation();
   const [selected, setSelected] = useState(paramChar || null);
@@ -29,6 +32,9 @@ const CharPage = ({ activeTab }) => {
     onHit: true,
     onBlock: true,
     dmg: true,
+    total: false,
+    xx: false,
+    atkLevel: false,
   });
 
   // Fetch moves for selected character
@@ -38,7 +44,6 @@ const CharPage = ({ activeTab }) => {
       try {
         const response = await axios.get(`/${name}/moves`);
         // response.data is expected to be an object of categories -> moves
-        console.log("moves response data: ", response.data);
         const moves = response.data || {};
         const flat = [];
           // moves is an object mapping moveName -> moveDetails
@@ -55,8 +60,9 @@ const CharPage = ({ activeTab }) => {
               onHit: move.onHit ?? move.onPC ?? "",
               onBlock: move.onBlock ?? "",
               dmg: move.dmg ?? "",
-
-              extraInfo: Array.isArray(move.extraInfo) ? move.extraInfo.join(' | ') : move.extraInfo || "",
+              total: move.total ?? "",
+              xx: move.xx ? move.xx.join(", ") : "",
+              atkLevel: move.atkLvl ?? "",
             });
           });
 
@@ -67,8 +73,6 @@ const CharPage = ({ activeTab }) => {
       }
     };
 
-    console.log("selected char: ", selected);
-    console.log("paramChar: ", paramChar);
     const name = paramChar;
     if (name) {
       setSelected(name);
@@ -91,8 +95,6 @@ const CharPage = ({ activeTab }) => {
       }
     };
 
-    // console.log("selected char: ", selected);
-    // console.log("paramChar: ", paramChar);
     const name = paramChar;
     if (name) {
       setSelected(name);
@@ -140,6 +142,11 @@ const CharPage = ({ activeTab }) => {
       size: columnWidths.recovery,
     },
     {
+      header: "Total",
+      accessorKey: "total",
+      size: 80,
+    },
+    {
       header: "On Hit",
       accessorKey: "onHit",
       size: columnWidths.onHit,
@@ -154,7 +161,17 @@ const CharPage = ({ activeTab }) => {
       accessorKey: "dmg",
       size: columnWidths.dmg,
     },
-  ], [columnWidths, commandMode]);
+    {
+      header: "XX (Cancels)",
+      accessorKey: "xx",
+      size: 100,
+    },
+    {
+      header: "Attack Level",
+      accessorKey: "atkLevel",
+      size: 100,
+    },
+  ], [commandMode, columnWidths]);
 
   const table = useReactTable({
     data: movesData,
@@ -164,53 +181,95 @@ const CharPage = ({ activeTab }) => {
 
   return (
     <div className="app">
-      <br />
-      <br />
-      <h1>{`${selected || paramChar || ""} ${activeTab === "moves" ? "Moves" : "Stats"}`}</h1>
+      <h1 className="charpage-title">{`${selected || paramChar || ""} ${activeTab === "moves" ? "Moves" : "Stats"}`}</h1>
 
       {activeTab === "moves" ? (
         <>
-          <div className="command-toggle">
-            <button
-              className={`toggle-btn-classic ${commandMode === "plain" ? "active" : ""}`}
-              onClick={() => setCommandMode("plain")}
-            >
-              Plain
-            </button>
-            <button
-              className={`toggle-btn-classic ${commandMode === "numpad" ? "active" : ""}`}
-              onClick={() => setCommandMode("numpad")}
-            >
-              Numpad
-            </button>
-            <button
-              className={`toggle-btn-modern ${commandMode === "ez" ? "active" : ""}`}
-              onClick={() => setCommandMode("ez")}
-            >
-              Modern
-            </button>
+          <div className="table-controls">
+            <div className="command-toggle">
+              <button
+                className={`toggle-btn-classic ${commandMode === "plain" ? "active" : ""}`}
+                onClick={() => setCommandMode("plain")}
+              >
+                Plain
+              </button>
+              <button
+                className={`toggle-btn-classic ${commandMode === "numpad" ? "active" : ""}`}
+                onClick={() => setCommandMode("numpad")}
+              >
+                Numpad
+              </button>
+              <button
+                className={`toggle-btn-modern ${commandMode === "ez" ? "active" : ""}`}
+                onClick={() => setCommandMode("ez")}
+              >
+                Modern
+              </button>
+            </div>
+            <div className="filter-btn-wrapper">
+              <button className="filter-btn" onClick={() => setFilterOpen((v) => !v)}>
+                ⚙️ Filter Columns
+              </button>
+              <ColumnFilter
+                columnVisibility={columnVisibility}
+                setColumnVisibility={setColumnVisibility}
+                open={filterOpen}
+                onClose={() => setFilterOpen(false)}
+              />
+            </div>
           </div>
           <div className="table-wrapper">
             <table className="moves-table">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id}>
-                      {header.isPlaceholder ? null : header.column.columnDef.header}
-                    </th>
-                  ))}
+                  {headerGroup.headers.map((header) => {
+                    const key = header.column.columnDef.accessorKey;
+                    // Always show command column
+                    if (key === 'plnCmd' || key === 'numCmd' || key === 'ezCmd') {
+                      return (
+                        <th key={header.id} style={{ width: `${header.getSize()}px`, minWidth: `${header.getSize()}px` }}>
+                          {header.isPlaceholder ? null : header.column.columnDef.header}
+                        </th>
+                      );
+                    }
+                    if (!columnVisibility[key]) return null;
+                    return (
+                      <th key={header.id} style={{ width: `${header.getSize()}px`, minWidth: `${header.getSize()}px` }}>
+                        {header.isPlaceholder ? null : header.column.columnDef.header}
+                      </th>
+                    );
+                  })}
                 </tr>
               ))}
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>{String(cell.getValue() ?? "")}</td>
-                  ))}
+                <tr
+                  key={row.id}
+                  className="clickable-row"
+                  onClick={() => setSelectedRow(row.original)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {row.getVisibleCells().map((cell) => {
+                    const key = cell.column.columnDef.accessorKey;
+                    // Always show command column
+                    if (key === 'plnCmd' || key === 'numCmd' || key === 'ezCmd') {
+                      return (
+                        <td key={cell.id} style={{ width: `${cell.column.getSize()}px`, minWidth: `${cell.column.getSize()}px` }}>{String(cell.getValue() ?? "")}</td>
+                      );
+                    }
+                    if (!columnVisibility[key]) return null;
+                    return (
+                      <td key={cell.id} style={{ width: `${cell.column.getSize()}px`, minWidth: `${cell.column.getSize()}px` }}>{String(cell.getValue() ?? "")}</td>
+                    );
+                  })}
                 </tr>
               ))}
+                  {/* Move Detail Modal/Panel */}
+                  {selectedRow && (
+                    <MoveDetail move={selectedRow} onClose={() => setSelectedRow(null)} />
+                  )}
             </tbody>
           </table>
           </div>
